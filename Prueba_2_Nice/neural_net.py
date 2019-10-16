@@ -117,6 +117,15 @@ class neural_net():
 		g = 1/(1 + np.exp(-z))
 		return g
 
+	def SoftMax(self, z):
+		"""
+		Return the SoftMax function evaluated at z
+		"""
+		z -= np.max(z, axis=1, keepdims=True) # avoid numeric instability
+		scores_exp = np.exp(z) # exp all the element of the score matrix
+		softmax_matrix = scores_exp / np.sum(scores_exp, axis=1, keepdims=True) # softmax
+		return softmax_matrix
+
 	def feed_forward(self, X):
 		"""
 		Calculate all the feed forward score in each step
@@ -345,7 +354,7 @@ class neural_net():
 				# scores -= np.max(scores, axis=1, keepdims=True) # avoid numeric instability
 				scores_exp = np.exp(scores)
 				softmax_matrix = scores_exp / np.sum(scores_exp, axis=1, keepdims=True)
-				scores = softmax_matrix 
+				scores = softmax_matrix
 				if o_size == 1:
 					predict = scores.round()
 				else:
@@ -354,11 +363,6 @@ class neural_net():
 			return predict, scores
 		else:
 			return predict
-
-	def zero_mean_data(self, X):
-		mean_X = np.mean(X, axis = 1, keepdims = True)
-		X = X - mean_X
-		return X
 
 	def train_sgd_momentum(self, X, y, X_val, y_val,learning_rate=1e-3,\
 		learning_rate_decay=0.95,reg=5e-6,\
