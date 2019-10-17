@@ -65,6 +65,6 @@ for j in range(0,N):
                     va='center', ha='center')
     ax0.scatter(P[j][0], P[j][1], s=40, lw=0)
     ax.scatter(P[j][0], P[j][1], F[j], s=40, lw = 0)
-    plt.pause(0.5)
+    plt.pause(0.8)
 
 plt.show()

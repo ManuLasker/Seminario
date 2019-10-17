@@ -46,7 +46,7 @@ for j in range(N):
                     arrowprops={'arrowstyle': '->', 'color': 'r', 'lw': 1},
                     va='center', ha='center')
     plt.scatter(X[j], Y[j], s=40, lw=0)
-    plt.pause(0.5)
+    plt.pause(0.8)
 
 
 plt.show()

@@ -92,7 +92,7 @@ for j in range(0,N):
             label=r'$\theta_0 = {:.3f}, \theta_1 = {:.3f}$'.format(*theta[j]))
     ax1.scatter(theta[j][0], theta[j][1], s=40, lw=0)
     ax2.scatter(theta[j][0], theta[j][1], J[j], s=40, lw = 0)
-    plt.pause(0.5)
+    plt.pause(0.8)
 # Labels, titles and a legend.
 ax1.set_xlabel(r'$\theta_0$')
 ax1.set_ylabel(r'$\theta_1$')
