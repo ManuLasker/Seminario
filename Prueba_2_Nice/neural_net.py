@@ -11,6 +11,7 @@ class neural_net():
 		self.function_params = {}
 		self.activation_function = activation_function
 		self.cost_function = cost_function
+		self.isolone=False
 		if self.validate_net() == 0:
 			return
 		"""
@@ -168,6 +169,10 @@ class neural_net():
 				if o_size != 1:
 					I_matrix = np.eye(o_size)
 					y = I_matrix[y.reshape(len(y))]
+					self.isolone=False
+				else:
+					self.isolone=True
+					y = y.reshape(-1,1)
 
 			score = self.feed_forward(X)
 			# print(y)
@@ -188,6 +193,7 @@ class neural_net():
 			if 'ol' in list(self.net_params.keys()):
 				o_size = self.net_params['ol']
 				if o_size != 1:
+					self.isolone=False
 					I_matrix = np.eye(o_size)
 					y = I_matrix[y.reshape(len(y))]
 
@@ -215,11 +221,17 @@ class neural_net():
 			if 'ol' in list(self.net_params.keys()):
 				o_size = self.net_params['ol']
 				if o_size != 1:
+					self.isolone=False
 					I_matrix = np.eye(o_size)
 					y_temp = I_matrix[y.reshape(len(y))]
+				else:
+					self.isolone=True
+					y_temp = y.reshape(-1,1)
 			z = self.feed_forward(X)
+			# print(z - y_temp)
 			n_grads = len(self.forward_results)
 			loss_grad = (z-y_temp)/(z*(1-z))
+		
 			i = n_grads
 			mult_const = 1/X.shape[0]
 
@@ -246,6 +258,7 @@ class neural_net():
 			if 'ol' in list(self.net_params.keys()):
 				o_size = self.net_params['ol']
 				if o_size != 1:
+					self.isolone=False
 					I_matrix = np.eye(o_size)
 					y_temp = I_matrix[y.reshape(len(y))]
 			scores = self.feed_forward(X).copy()
@@ -315,8 +328,13 @@ class neural_net():
 
 				if iteration % epoch == 0:
 					# Check accuracy
-					train_acc = (self.predict(X) == y).mean()
-					val_acc = (self.predict(X_val) == y_val).mean()
+					y_temp = y
+					y_val_temp = y_val
+					if self.isolone:
+						y_temp = y_temp.reshape(-1,1)
+						y_val_temp = y_val_temp.reshape(-1,1)
+					train_acc = (self.predict(X)== y_temp).mean()
+					val_acc = (self.predict(X_val) == y_val_temp).mean()
 					train_acc_history.append(train_acc)
 					val_acc_history.append(val_acc)
 					ratio_temp = list(self.ratio_weigths(self.function_params, learning_rate, grads))
@@ -420,8 +438,13 @@ class neural_net():
 				if it % epoch == 0:
 					# Check accuracy
 					#print(f'{it}, {loss}', end = '\r')
-					train_acc = (self.predict(X_batch) == y_batch).mean()
-					val_acc = (self.predict(X_val) == y_val).mean()
+					y_temp = y_batch
+					y_val_temp = y_val
+					if self.isolone:
+						y_temp = y_temp.reshape(-1,1)
+						y_val_temp = y_val_temp.reshape(-1,1)
+					train_acc = (self.predict(X_batch) == y_temp).mean()
+					val_acc = (self.predict(X_val) == y_val_temp).mean()
 					train_acc_history.append(train_acc)
 					val_acc_history.append(val_acc)
 					ratio_temp = list(self.ratio_weigths(self.function_params, learning_rate, grads))
@@ -484,8 +507,13 @@ class neural_net():
 				if it % epoch == 0:
 					# Check accuracy
 					#print(f'{it}, {loss}', end = '\r')
-					train_acc = (self.predict(X_batch) == y_batch).mean()
-					val_acc = (self.predict(X_val) == y_val).mean()
+					y_temp = y_batch
+					y_val_temp = y_val
+					if self.isolone:
+						y_temp = y_temp.reshape(-1,1)
+						y_val_temp = y_val_temp.reshape(-1,1)	
+					train_acc = (self.predict(X_batch) == y_temp).mean()
+					val_acc = (self.predict(X_val) == y_val_temp).mean()
 					train_acc_history.append(train_acc)
 					val_acc_history.append(val_acc)
 					ratio_temp = list(self.ratio_weigths(self.function_params, learning_rate, grads))
